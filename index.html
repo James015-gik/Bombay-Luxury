@@ -39,7 +39,6 @@
         .btn-primary { background: var(--gradient); color: white; padding: 1.2rem 3rem; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; font-size: 1.1rem; box-shadow: var(--shadow-md); }
         .btn-secondary { background: white; color: var(--primary); padding: 1.2rem 3rem; border-radius: 50px; border: 2px solid var(--primary); text-decoration: none; display: inline-block; font-weight: 600; text-align: center; }
         .hero-image img { width: 100%; border-radius: 30px; box-shadow: var(--shadow-lg); }
-        .ig-link { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; box-shadow: var(--shadow-sm); }
         
         /* Stats */
         .stats { padding: 4rem 0; background: white; }
@@ -131,7 +130,7 @@
                 <p>Premium beauty services in Manhattan & Brooklyn. Expert threading, luxurious facials, and flawless lash extensions.</p>
                 <div class="hero-buttons">
                     <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Book Appointment</button>
-                    <a href="https://www.instagram.com/bombaybeautysalonnyc" target="_blank" class="btn-secondary">Follow on Instagram</a>
+                    <a href="https://www.instagram.com/bombaybeautysalonnyc" target="_blank" class="btn-secondary">📸 Follow on Instagram</a>
                 </div>
             </div>
             <div class="hero-image">
@@ -321,51 +320,56 @@
 </section>
 
 <script>
+// Check if GSAP loaded (prevents errors in offline preview)
 if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
-// Hero animations
-gsap.from('.hero-text h1', { opacity: 0, y: 50, duration: 1, delay: 0.3 });
-gsap.from('.hero-text p', { opacity: 0, y: 30, duration: 1, delay: 0.5 });
-gsap.from('.hero-buttons', { opacity: 0, y: 30, duration: 1, delay: 0.7 });
-gsap.from('.hero-image img', { opacity: 0, x: 50, duration: 1, delay: 0.5 });
 
-// Stats counter
-document.querySelectorAll('.counter').forEach(counter => {
-    const target = parseFloat(counter.dataset.target);
-    ScrollTrigger.create({
-        trigger: counter,
-        start: 'top 80%',
-        onEnter: () => {
-            gsap.to(counter, {
-                textContent: target,
-                duration: 2,
-                snap: { textContent: target < 100 ? 0.1 : 1 },
-                onUpdate: function() {
-                    this.targets()[0].textContent = parseFloat(this.targets()[0].textContent).toFixed(target < 100 ? 1 : 0);
-                }
-            });
-        }
+    // Hero animations
+    gsap.from('.hero-text h1', { opacity: 0, y: 50, duration: 1, delay: 0.3 });
+    gsap.from('.hero-text p', { opacity: 0, y: 30, duration: 1, delay: 0.5 });
+    gsap.from('.hero-buttons', { opacity: 0, y: 30, duration: 1, delay: 0.7 });
+    gsap.from('.hero-image img', { opacity: 0, x: 50, duration: 1, delay: 0.5 });
+
+    // Stats counter
+    document.querySelectorAll('.counter').forEach(counter => {
+        const target = parseFloat(counter.dataset.target);
+        ScrollTrigger.create({
+            trigger: counter,
+            start: 'top 80%',
+            onEnter: () => {
+                gsap.to(counter, {
+                    textContent: target,
+                    duration: 2,
+                    snap: { textContent: target < 100 ? 0.1 : 1 },
+                    onUpdate: function() {
+                        this.targets()[0].textContent = parseFloat(this.targets()[0].textContent).toFixed(target < 100 ? 1 : 0);
+                    }
+                });
+            }
+        });
     });
-});
 
-// Service cards animation
-gsap.from('.service-card', {
-    scrollTrigger: { trigger: '.services', start: 'top 70%' },
-    opacity: 0, y: 100, stagger: 0.2, duration: 0.8
-});
+    // Service cards animation
+    gsap.from('.service-card', {
+        scrollTrigger: { trigger: '.services', start: 'top 70%' },
+        opacity: 0, y: 100, stagger: 0.2, duration: 0.8
+    });
 
-// Location cards animation
-gsap.from('.location-card', {
-    scrollTrigger: { trigger: '.locations', start: 'top 70%' },
-    opacity: 0, y: 100, stagger: 0.3, duration: 0.8
-});
+    // Location cards animation
+    gsap.from('.location-card', {
+        scrollTrigger: { trigger: '.locations', start: 'top 70%' },
+        opacity: 0, y: 100, stagger: 0.3, duration: 0.8
+    });
+} else {
+    // Fallback for offline preview - show final values immediately
+    document.querySelectorAll('.counter').forEach(counter => {
+        counter.textContent = counter.dataset.target;
+    });
+}
 
 // Form submission
 document.getElementById('bookingForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    const formData = new FormData(this);
-    const data = {};
-    formData.forEach((value, key) => data[key] = value);
     
     // Create mailto link
     const subject = 'Booking Request - Bombay Beauty Salon';
